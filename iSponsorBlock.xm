@@ -739,15 +739,16 @@ NSInteger pageStyle = 0;
         self.sponsorBlockButton = [%c(YTQTMButton) iconButton];
         self.sponsorBlockButton.frame = CGRectMake(0, 0, 40, 40);
         
+        UIImage *image = [UIImage imageWithContentsOfFile:[resourcesBundle pathForResource:@"sponsorblocksettings-20@2x" ofType:@"png"]];
         if([%c(YTPageStyleController) pageStyle]) { //dark mode
-            [self.sponsorBlockButton setImage:[UIImage imageWithContentsOfFile:[resourcesBundle pathForResource:@"sponsorblocksettings-20@2x" ofType:@"png"]] forState:UIControlStateNormal];
+            image = [image imageWithTintColor:UIColor.whiteColor renderingMode:UIImageRenderingModeAlwaysTemplate];
+            [self.sponsorBlockButton setTintColor:UIColor.whiteColor];
         }
         else { //light mode
-            UIImage *image = [UIImage imageWithContentsOfFile:[resourcesBundle pathForResource:@"sponsorblocksettings-20@2x" ofType:@"png"]];
             image = [image imageWithTintColor:UIColor.blackColor renderingMode:UIImageRenderingModeAlwaysTemplate];
-            [self.sponsorBlockButton setImage:image forState:UIControlStateNormal];
             [self.sponsorBlockButton setTintColor:UIColor.blackColor];
         }
+        [self.sponsorBlockButton setImage:image forState:UIControlStateNormal];
         pageStyle = [%c(YTPageStyleController) pageStyle];
         
         [self.sponsorBlockButton addTarget:self action:@selector(sponsorBlockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
