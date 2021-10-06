@@ -311,7 +311,7 @@ NSString *modifiedTimeString;
 
 %hook YTPlayerBarSegmentView
 -(void)setFrame:(CGRect)frame {
-    %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 2));
+    %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height));
 }
 %end
 
@@ -322,17 +322,17 @@ NSString *modifiedTimeString;
     if (CGRectIsEmpty(frame)) {
         return %orig(CGRectMake(0,0,0,0));
     }
-    return %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 2));
+    return %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height));
 }
 -(void)setFrame:(CGRect)frame {
     if (CGRectIsEmpty(frame)) {
         %orig(CGRectMake(0,0,0,0));
     }
-    %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 2));
+    %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height));
 }
 -(CGRect)frame {
     CGRect frame = %orig;
-    return CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 2);
+    return CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 }
 
 -(UIColor *)colorForType:(NSInteger)type {
@@ -356,14 +356,7 @@ NSString *modifiedTimeString;
 
 %hook YTInlinePlayerBarView
 -(void)maybeUseSegmentedProgressView {
-    if([[self valueForKey:@"_chapters"] count] == 0 && [[self valueForKey:@"_timestampMarkers"] count] == 0) {
-        [self setValue:@[[[%c(YTPlayerBarTimestampMarkerInfo) alloc] init]] forKey:@"_timestampMarkers"];
-        %orig;
-        [self setValue:[NSArray array] forKey:@"_timestampMarkers"];
-    }
-    else {
-        %orig;
-    }
+    %orig;
 }
 %end
 
@@ -632,7 +625,7 @@ AVQueuePlayer *queuePlayer;
         CGFloat beginX = (startTime * scrubber.frame.size.width) / totalTime;
         CGFloat endX = (endTime * scrubber.frame.size.width) / totalTime;
         CGFloat markerWidth = endX - beginX;
-        UIView *markerView = [[UIView alloc] initWithFrame:CGRectMake(beginX, 2, markerWidth, 5)];
+        UIView *markerView = [[UIView alloc] initWithFrame:CGRectMake(beginX, 0, markerWidth, 5)];
 
         if([segment.category isEqualToString:@"sponsor"]) markerView.backgroundColor = colorWithHexString([kCategorySettings objectForKey:@"sponsorColor"]);
         else if([segment.category isEqualToString:@"intro"]) markerView.backgroundColor = colorWithHexString([kCategorySettings objectForKey:@"introColor"]);
