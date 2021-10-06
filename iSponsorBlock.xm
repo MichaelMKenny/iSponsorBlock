@@ -356,7 +356,13 @@ NSString *modifiedTimeString;
 
 %hook YTInlinePlayerBarView
 -(void)maybeUseSegmentedProgressView {
-    %orig;
+    [self setValue:@[[[%c(YTPlayerBarTimestampMarkerInfo) alloc] init]] forKey:@"_timestampMarkers"];
+    if([[self valueForKey:@"_chapters"] count] == 0 && [[self valueForKey:@"_timestampMarkers"] count] == 0) {
+        %orig;
+        [self setValue:[NSArray array] forKey:@"_timestampMarkers"];
+    } else {
+        %orig;
+    }
 }
 %end
 
